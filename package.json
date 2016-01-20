@@ -1,0 +1,34 @@
+{
+  "name": "node-red-contrib-blynk-websockets",
+  "version": "0.0.1",
+  "description": "Node Red integration with Blynk App and Server through websockets",
+  "main": "blynk-websockets.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tzapu/node-red-contrib-blynk-websockets.git"
+  },
+  "keywords": [
+    "node-red",
+    "blynk",
+    "iot",
+    "websockets"
+  ],
+  "author": "Alex T <alex@tzapu.com> (http://tzapu.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tzapu/node-red-contrib-blynk-websockets/issues"
+  },
+  "homepage": "https://github.com/tzapu/node-red-contrib-blynk-websockets",
+  "dependencies": {
+    "buffer-dataview": "0.0.2",
+    "ws": "^1.0.1"
+  },
+  "node-red": {
+    "nodes": {
+      "blynk": "blynk-websockets.js"
+    }
+  }
+}
