@@ -39,6 +39,9 @@
         if(this.type == 'blynk-websockets-in-write') {
 	        _type = 'Write Event';
         } 
+        if(this.type == 'blynk-websockets-out-write') {
+	        _type = 'Write';
+        } 
         if(this.pin) {
 	        _pin ='Pin V'+ this.pin + ' - ' +  _type;
         }
