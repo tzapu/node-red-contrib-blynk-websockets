@@ -501,7 +501,7 @@ module.exports = function(RED) {
         }
         this.on("input", function(msg) {
             var payload;
-            console.log('writing');
+            //console.log('writing');
             /*if (this.serverConfig.wholemsg) {
                 delete msg._session;
                 payload = JSON.stringify(msg);
@@ -535,7 +535,7 @@ module.exports = function(RED) {
             }
             if (payload) {
 	            //todo: check payload and validate
-	            console.log('write');
+	            //console.log('write');
 	            node.serverConfig.virtualWrite(node.pin, payload);
             }
 
