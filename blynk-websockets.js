@@ -92,7 +92,7 @@ module.exports = function(RED) {
     */
     function encodeCommand(command, msgId, body) {
         var BLYNK_HEADER_SIZE = 5;
-        console.log('encode', command, body);
+        //console.log('encode', command, body);
         var bodyLength = (body ? body.length : 0);
         var bufArray = new Buffer(BLYNK_HEADER_SIZE + bodyLength);
         var dataview = new DataView(bufArray);
@@ -188,6 +188,8 @@ module.exports = function(RED) {
         node.closing = false;
 		node.working = false;
 		
+		node.setMaxListeners(100);
+		
 		node.pinger = setInterval(function() {
 			//only ping if connected and working
         	if(node.working) {
@@ -206,7 +208,7 @@ module.exports = function(RED) {
 
         function handleConnection(/*socket*/socket) {
             var id = (1+Math.random()*4294967295).toString(16);
-            
+            socket.setMaxListeners(100);
             socket.on('open',function() {
 	            console.log('open');
 	            node.working = false;
@@ -318,9 +320,9 @@ module.exports = function(RED) {
 	    //console.log('ping');
     	//send(this.server, 'login ' + token);
     	var values = ['vw', vpin, val];
-		console.log(values);
+		//console.log(values);
 		var data = values.join('\0');
-		console.log(data);		
+		//console.log(data);		
     	this.server.send(encodeCommand(MsgType.HARDWARE, 1, data));
    	}    
 	
