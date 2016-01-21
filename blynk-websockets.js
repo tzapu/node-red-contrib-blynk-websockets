@@ -51,7 +51,10 @@ module.exports = function(RED) {
 		            command.pin = values[1];
 		            if(values.length > 2) {
 			            command.value = values[2];
+						//we have an array of commands, return array as well
+						command.array = values.slice(2, values.length);
 		            }
+		            
 	            }
             }
             //console.log(command);
@@ -339,7 +342,7 @@ module.exports = function(RED) {
 	
    
     BlynkClientNode.prototype.handleWriteEvent = function(command) {
-	    console.log('handle request write event', command.pin);
+	    console.log('handle request write event', command);
         
         for (var i = 0; i < this._inputNodes.length; i++) {
 	        if(this._inputNodes[i].nodeType == 'write' && this._inputNodes[i].pin == command.pin) {
@@ -348,6 +351,10 @@ module.exports = function(RED) {
 		        msg = {
 		            payload: command.value
 		        };
+				
+				if(command.array) {
+					msg.arrayOfValues = command.array;
+				}
 
 	            this._inputNodes[i].send(msg);
 	        }
