@@ -45,6 +45,9 @@
         if(this.pin) {
 	        _pin ='Pin V'+ this.pin + ' - ' +  _type;
         }
+        if(this.type == "blynk-websockets-out-email") {
+	        return this.name||this.email||'email';
+        }
         return this.name||_pin;
     }
        
@@ -59,6 +62,19 @@
         return true;
     }
 
+    RED.nodes.registerType('blynk-websockets-client',{
+        category: 'config',
+        defaults: {
+            path: {value: '', required:true, validate:RED.validators.regex(/^((?!\/debug\/ws).)*$/) },
+             key: {value: '', required:true}        
+        },
+        inputs:0,
+        outputs:0,
+        label: function() {
+            return this.path;
+        }
+    });
+    
     RED.nodes.registerType('blynk-websockets-in-read', {
         category: 'blynk ws',
         paletteLabel: 'read event',
@@ -119,20 +135,29 @@
         oneditsave: ws_oneditsave,
         oneditprepare: ws_oneditprepare
     });
-
-    RED.nodes.registerType('blynk-websockets-client',{
-        category: 'config',
-        defaults: {
-            path: {value: '', required:true, validate:RED.validators.regex(/^((?!\/debug\/ws).)*$/) },
-             key: {value: '', required:true}        
-        },
-        inputs:0,
-        outputs:0,
-        label: function() {
-            return this.path;
-        }
-    });
     
+    RED.nodes.registerType('blynk-websockets-out-email',{
+        category: 'blynk ws',
+        paletteLabel: 'email',
+        defaults: {
+            name: {value: ""},
+            email: {},
+            client: {type: "blynk-websockets-client", validate: ws_validateclient}
+        },
+        color:"#1BC17C",
+        inputs:1,
+        outputs:0,
+        icon: "email.png",
+        align: "right",
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+        label: ws_label,
+        oneditsave: ws_oneditsave,
+        oneditprepare: ws_oneditprepare
+    });
+
+
 })();
 </script>
 
@@ -155,7 +180,7 @@
 
 <script type="text/x-red" data-help-name="blynk-websockets-in-read">
     <p>Blynk read event node.</p>
-    <p>msg.payload will cotanin the virtual pin number that triggered the read event</p>
+    <p>msg.payload will contain the virtual pin number that triggered the read event</p>
 </script>
 
 <!-- Blynk Input Node - Write -->
@@ -200,6 +225,30 @@
     <p>This node will write the value in payload to the specified pin number.</p>.
 </script>
 
+
+<!-- Blynk out Node - Email -->
+<script type="text/x-red" data-template-name="blynk-websockets-out-email">
+    <div class="form-row" id="websocket-client-row">
+        <label for="node-input-client"><i class="fa fa-bookmark"></i> <span>Connection</span></label>
+        <input type="text" id="node-input-client">
+    </div>
+   	<div class="form-row">
+        <label for="node-input-email"><i class="fa fa-tag"></i> <span>Email</span></label>
+        <input type="text" id="node-input-email" placeholder="Email address">
+    </div>
+   	<div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="blynk-websockets-out-email">
+    <p>Blynk email node.</p>
+    <p>This node will send an email using your msg.topic for subject and msg.payload for content.
+	    <br />
+	    Remember to add the email widget in your project and that the Blynk server has a setting how many emails per minute to send.
+    </p>
+</script>
 
 <!-- WebSocket Client configuration node -->
 <script type="text/x-red" data-template-name="blynk-websockets-client">

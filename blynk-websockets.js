@@ -325,10 +325,21 @@ module.exports = function(RED) {
 		//console.log(data);		
     	this.server.send(encodeCommand(MsgType.HARDWARE, 1, data));
    	}    
+
+    BlynkClientNode.prototype.sendEmail = function(to, subject, message) {
+	    //console.log('ping');
+    	//send(this.server, 'login ' + token);
+    	//[to, topic, message]
+    	var values = [to, subject, message];
+		//console.log(values);
+		var data = values.join('\0');
+		//console.log(data);		
+    	this.server.send(encodeCommand(MsgType.EMAIL, null, data));
+   	}    
 	
    
     BlynkClientNode.prototype.handleWriteEvent = function(command) {
-	    console.log('handle request write event', command);
+	    console.log('handle request write event', command.pin);
         
         for (var i = 0; i < this._inputNodes.length; i++) {
 	        if(this._inputNodes[i].nodeType == 'write' && this._inputNodes[i].pin == command.pin) {
@@ -344,7 +355,7 @@ module.exports = function(RED) {
 	}    
 	
 	BlynkClientNode.prototype.handleReadEvent = function(command) {
-	    console.log('handle request read event', command);
+	    console.log('handle request read event', command.pin);
        //msg._session = {type:"websocket", id:id};
         
         for (var i = 0; i < this._inputNodes.length; i++) {
@@ -543,4 +554,72 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType("blynk-websockets-out-write", BlynkOutWriteNode);
+
+    function BlynkOutEmailNode(n) {
+        RED.nodes.createNode(this,n);
+        var node = this;
+        this.server = n.client;
+        this.email = n.email;
+        
+        this.serverConfig = RED.nodes.getNode(this.server);
+        if (!this.serverConfig) {
+            this.error(RED._("websocket.errors.missing-conf"));
+        }
+        else {
+            // TODO: nls
+            this.serverConfig.on('opened', function(n) { node.status({fill:"yellow",shape:"dot",text:"connecting "+n}); });
+            this.serverConfig.on('connected', function(n) { node.status({fill:"green",shape:"dot",text:"connected "+n}); });
+            this.serverConfig.on('erro', function() { node.status({fill:"red",shape:"ring",text:"error"}); });
+            this.serverConfig.on('closed', function() { node.status({fill:"red",shape:"ring",text:"disconnected"}); });
+        }
+        this.on("input", function(msg) {
+            var payload;
+            //console.log('writing');
+            /*if (this.serverConfig.wholemsg) {
+                delete msg._session;
+                payload = JSON.stringify(msg);
+            } else if (msg.hasOwnProperty("payload")) {
+                if (!Buffer.isBuffer(msg.payload)) { // if it's not a buffer make sure it's a string.
+                    payload = RED.util.ensureString(msg.payload);
+                }
+                else {
+                    payload = msg.payload;
+                }
+            }
+            if (payload) {
+                if (msg._session && msg._session.type == "websocket") {
+                    node.serverConfig.reply(msg._session.id, payload);
+                } else {
+                    node.serverConfig.broadcast(payload,function(error){
+                        if (!!error) {
+                            node.warn(RED._("websocket.errors.send-error")+inspect(error));
+                        }
+                    });
+                }
+            }*/
+            
+            if (msg.hasOwnProperty("payload")) {
+                if (!Buffer.isBuffer(msg.payload)) { // if it's not a buffer make sure it's a string.
+                    payload = RED.util.ensureString(msg.payload);
+                }
+                else {
+                    payload = msg.payload;
+                }
+            }
+            if (payload) {
+	            //todo: check payload and validate
+	            //console.log('write');
+	            var subject = payload;
+	            if(msg.topic) {
+		            subject = msg.topic;
+	            }
+	            node.serverConfig.sendEmail(node.email, subject, payload);
+            }
+
+            
+        });
+    }
+    RED.nodes.registerType("blynk-websockets-out-email", BlynkOutEmailNode);
+
+
 }
