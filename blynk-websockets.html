@@ -48,6 +48,9 @@
         if(this.type == "blynk-websockets-out-email") {
 	        return this.name||this.email||'email';
         }
+        if(this.type == "blynk-websockets-client") {
+	        return this.name||this.key||'n/a';
+        }
         return this.name||_pin;
     }
        
@@ -65,21 +68,20 @@
     RED.nodes.registerType('blynk-websockets-client',{
         category: 'config',
         defaults: {
+	        name: { value: ''},
             path: {value: '', required:true, validate:RED.validators.regex(/^((?!\/debug\/ws).)*$/) },
              key: {value: '', required:true}        
         },
         inputs:0,
         outputs:0,
-        label: function() {
-            return this.path;
-        }
+        label: ws_label
     });
     
     RED.nodes.registerType('blynk-websockets-in-read', {
         category: 'blynk ws',
         paletteLabel: 'read event',
         defaults: {
-            name: {value: ""},
+            name: {value: ''},
             pin: {value: 0},
             client: {type:"blynk-websockets-client", validate: ws_validateclient}
         },
@@ -99,7 +101,7 @@
         category: 'blynk ws',
         paletteLabel: 'write event',
         defaults: {
-            name: {value: ""},
+            name: {value: ''},
             pin: {value: 0},
             client: {type:"blynk-websockets-client", validate: ws_validateclient}
         },
@@ -119,7 +121,7 @@
         category: 'blynk ws',
         paletteLabel: 'write',
         defaults: {
-            name: {value: ""},
+            name: {value: ''},
             pin: {value: 0},
             client: {type: "blynk-websockets-client", validate: ws_validateclient}
         },
@@ -140,7 +142,7 @@
         category: 'blynk ws',
         paletteLabel: 'email',
         defaults: {
-            name: {value: ""},
+            name: {value: ''},
             email: {},
             client: {type: "blynk-websockets-client", validate: ws_validateclient}
         },
@@ -251,7 +253,7 @@
     </p>
 </script>
 
-<!-- WebSocket Client configuration node -->
+<!-- Blynk Server configuration node -->
 <script type="text/x-red" data-template-name="blynk-websockets-client">
     <div class="form-row">
         <label for="node-config-input-path"><i class="fa fa-bookmark"></i>Url</label>
@@ -261,6 +263,11 @@
         <label for="node-config-input-key"><i class="fa fa-bookmark"></i>Project key</label>
         <input type="text" id="node-config-input-key" placeholder="Blynk token">
     </div>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+
     <div class="form-tips">
         <p>Info</p>
 
@@ -268,5 +275,5 @@
 </script>
 
 <script type="text/x-red" data-help-name="blynk-websockets-client">
-   <p>This configuration node connects a WebSocket client to the specified URL.</p>
+   <p>This configuration node connects to a Blynk WebSocket Server on the specified URL.</p>
 </script>
