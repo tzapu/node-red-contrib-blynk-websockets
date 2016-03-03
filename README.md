@@ -2,7 +2,10 @@
 Blynk app integration with Node Red using WebSockets protocol
 
 ## Websockets version
-This only work son local installed Blynk server for now.
+This works for both local and cloud BLynk servers.
+For local, wss:// works if you ve got a certificate installed on BLynk server.
+FOr cloud Blynk server, only non ssl, ws:// works for the time being, as there is no SSL cert installed.
+You can use ws://cloud.blynk.cc:8082/ws as the server url.
 
 [![NPM](https://nodei.co/npm/node-red-contrib-blynk-websockets.png?mini=true)](https://npmjs.org/package/node-red-contrib-blynk-websockets)
 [![npm version](https://badge.fury.io/js/node-red-contrib-blynk-websockets.svg)](https://badge.fury.io/js/node-red-contrib-blynk-websockets)
