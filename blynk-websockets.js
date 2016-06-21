@@ -362,7 +362,7 @@ module.exports = function(RED) {
 	}    
 	
 	BlynkClientNode.prototype.handleReadEvent = function(command) {
-	    console.log('handle request read event', command.pin);
+	    //console.log('handle request read event', command.pin);
        //msg._session = {type:"websocket", id:id};
         
         for (var i = 0; i < this._inputNodes.length; i++) {
