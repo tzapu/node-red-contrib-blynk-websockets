@@ -267,7 +267,7 @@ module.exports = function(RED) {
             this.log(RED._("Client logged"));
             if (!err) {
                 this.logged = true;
-                this.emit('opened', '');
+                this.emit('connected', '');
             }
         }.bind(this));
     }
