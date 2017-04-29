@@ -256,11 +256,11 @@
 <!-- Blynk Server configuration node -->
 <script type="text/x-red" data-template-name="blynk-websockets-client">
     <div class="form-row">
-        <label for="node-config-input-path"><i class="fa fa-bookmark"></i>Url</label>
-        <input type="text" id="node-config-input-path" placeholder="ws://blynk-cloud.com:8082/websocket">
+        <label for="node-config-input-path"><i class="fa fa-bookmark"></i> Url</label>
+        <input type="text" id="node-config-input-path" placeholder="ws://blynk-cloud.com:8080/websockets">
     </div>
     <div class="form-row">
-        <label for="node-config-input-key"><i class="fa fa-bookmark"></i>Project key</label>
+        <label for="node-config-input-key"><i class="fa fa-bookmark"></i> Project key</label>
         <input type="text" id="node-config-input-key" placeholder="Blynk token">
     </div>
     <div class="form-row">
@@ -269,11 +269,15 @@
     </div>
 
     <div class="form-tips">
-        <p>Info</p>
+        <p>The url of Blynk Cloud Server is:<br>
+        <b>ws://blynk-cloud.com:8080/websockets</b></p>
 
     </div>
 </script>
 
 <script type="text/x-red" data-help-name="blynk-websockets-client">
-   <p>This configuration node connects to a Blynk WebSocket Server on the specified URL.</p>
+   <p>This configuration node connects to a Blynk WebSocket Server on the specified URL.
+   <br /><br />
+	    The url of Blynk Cloud Server is:<br>
+      <b>ws://blynk-cloud.com:8080/websockets</b></p>
 </script>
